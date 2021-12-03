@@ -49,7 +49,7 @@ class Verify(Command):
         if "Verified" in [role.name for role in ctx.message.author.roles]:
             await ctx.channel.send(embed=Embed.build(
                 fields=[("Already Verified", "You cannot use this command as you're already verified.")],
-                member=ctx.author, embed_type=EmbedType.ERROR).get())
+                embed_type=EmbedType.ERROR).get())
             return
 
         image = ImageCaptcha(width=300, height=80)
@@ -71,10 +71,14 @@ class Verify(Command):
         try:
             msg = await self.bot.wait_for("message", check=confirm_message, timeout=30)
         except asyncio.TimeoutError:
-            await ctx.channel.send("Timed out, please re-verify.")
+            await ctx.channel.send(embed=Embed.build(
+                fields=[("Timeout", "Your verification request has timed out. Please re-verify.")],
+                embed_type=EmbedType.ERROR).get())
         else:
             if msg.content.lower() == s.lower():
                 await Verify.give_verify_role(ctx.guild, msg.author, msg.channel)
                 await ctx.author.send(f"Successfully verified in guild: '{ctx.guild.name}'.")
             else:
-                await ctx.send("Your message does not match the CAPTCHA, please re-verify.")
+                await ctx.channel.send(embed=Embed.build(
+                    fields=[("Incorrect CAPTCHA", "Your response does not match the CAPTCHA. Please re-verify.")],
+                    embed_type=EmbedType.ERROR).get())

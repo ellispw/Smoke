@@ -1,9 +1,10 @@
 from discord.ext import commands
-from discord import Intents, Client, client
+from discord import Intents
 
 from smoke.command.impl.help import Help
 from smoke.command.impl.kick import Kick
 from smoke.command.impl.lockdown import Lockdown
+from smoke.command.impl.music import Music
 from smoke.command.impl.perm import Perm
 from smoke.command.impl.verify import Verify
 
@@ -28,6 +29,7 @@ class Smoke:
         self.bot.add_cog(Help(self.bot))
         self.bot.add_cog(Perm(self.bot))
         self.bot.add_cog(Lockdown(self.bot))
+        self.bot.add_cog(Music(self.bot))
 
         @self.bot.event
         async def on_error(event, *args, **kwargs):

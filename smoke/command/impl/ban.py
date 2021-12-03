@@ -12,6 +12,7 @@ class Ban(Command):
         super().__init__(bot=bot, name="Ban", desc="Bans a member from the guild", perms=["smoke.ban"])
 
     @commands.command()
+    @commands.guild_only()
     async def ban(self, ctx, member):
         if not await PermissionHandler.has_permissions(ctx.author, ctx.guild, "smoke.ban"):
             await ctx.channel.send(embed=PermissionHandler.invalid_perms_embed)
